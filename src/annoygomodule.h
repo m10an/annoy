@@ -1,102 +1,29 @@
-#include "annoylib.h"
-#include "kissrandom.h"
+#ifndef __GO_H__
+#define __GO_H__
 
-using namespace Annoy;
+#include <stdbool.h>
+#include <stdint.h>
 
-namespace GoAnnoy {
+void free_annidx(void *);
+void add_item(void *, int, const float *);
+void build(void *, int, const float *);
+bool save(void *, const char *, bool);
+//bool save(void *, const char *);
+void unload(void *);
+bool load(void *, const char *, bool);
+//bool load(void *, const char *);
+float get_distance(void *, int, int);
+//void get_nns_by_item(void *, int, int, int, int32_t *, float *);
+//void get_nns_by_vector(void *, const float *w, int, int, int32_t *, float *);
+//void get_nns_by_item(void *, int, int, int, int32_t *);
+//void get_nns_by_vector(void *, const float *w, int, int, int32_t *);
+int get_n_items(void *);
+void verbose(void *, bool);
+//void get_item(void *, int, float *);
+bool on_disk_build(void *, const char *);
+void* create_annidx_angular(int);
+void* create_annidx_euclidean(int);
+void* create_annidx_manhattan(int);
+void* create_annidx_dot_product(int);
 
-class AnnoyIndex {
- protected:
-  ::AnnoyIndexInterface<int32_t, float> *ptr;
-
-  int f;
-
- public:
-  ~AnnoyIndex() {
-    delete ptr;
-  };
-  void addItem(int item, const float* w) {
-    ptr->add_item(item, w);
-  };
-  void build(int q) {
-    ptr->build(q, 1);
-  };
-  bool save(const char* filename, bool prefault) {
-    return ptr->save(filename, prefault);
-  };
-  bool save(const char* filename) {
-    return ptr->save(filename, true);
-  };
-  void unload() {
-    ptr->unload();
-  };
-  bool load(const char* filename, bool prefault) {
-    return ptr->load(filename, prefault);
-  };
-  bool load(const char* filename) {
-    return ptr->load(filename, true);
-  };
-  float getDistance(int i, int j) {
-    return ptr->get_distance(i, j);
-  };
-  void getNnsByItem(int item, int n, int search_k, vector<int32_t>* result, vector<float>* distances) {
-    ptr->get_nns_by_item(item, n, search_k, result, distances);
-  };
-  void getNnsByVector(const float* w, int n, int search_k, vector<int32_t>* result, vector<float>* distances) {
-    ptr->get_nns_by_vector(w, n, search_k, result, distances);
-  };
-  void getNnsByItem(int item, int n, int search_k, vector<int32_t>* result) {
-    ptr->get_nns_by_item(item, n, search_k, result, NULL);
-  };
-  void getNnsByVector(const float* w, int n, int search_k, vector<int32_t>* result) {
-    ptr->get_nns_by_vector(w, n, search_k, result, NULL);
-  };
-
-  int getNItems() {
-    return (int)ptr->get_n_items();
-  };
-  void verbose(bool v) {
-    ptr->verbose(v);
-  };
-  void getItem(int item, vector<float> *v) {
-    v->resize(this->f);
-    ptr->get_item(item, &v->front());
-  };
-  bool onDiskBuild(const char* filename) {
-    return ptr->on_disk_build(filename);
-  };
-};
-
-class AnnoyIndexAngular : public AnnoyIndex 
-{
- public:
-  AnnoyIndexAngular(int f) {
-    ptr = new ::AnnoyIndex<int32_t, float, ::Angular, ::Kiss64Random, AnnoyIndexSingleThreadedBuildPolicy>(f);
-    this->f = f;
-  }
-};
-
-class AnnoyIndexEuclidean : public AnnoyIndex {
- public:
-  AnnoyIndexEuclidean(int f) {
-    ptr = new ::AnnoyIndex<int32_t, float, ::Euclidean, ::Kiss64Random, AnnoyIndexSingleThreadedBuildPolicy>(f);
-    this->f = f;
-  }
-};
-
-class AnnoyIndexManhattan : public AnnoyIndex {
- public:
-  AnnoyIndexManhattan(int f) {
-    ptr = new ::AnnoyIndex<int32_t, float, ::Manhattan, ::Kiss64Random, AnnoyIndexSingleThreadedBuildPolicy>(f);
-    this->f = f;
-  }
-};
-
-class AnnoyIndexDotProduct : public AnnoyIndex {
- public:
-  AnnoyIndexDotProduct(int f) {
-    ptr = new ::AnnoyIndex<int32_t, float, ::DotProduct, ::Kiss64Random, AnnoyIndexSingleThreadedBuildPolicy>(f);
-    this->f = f;
-  }
-};
-}
+#endif
