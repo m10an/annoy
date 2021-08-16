@@ -4,7 +4,7 @@ import "testing"
 import "fmt"
 
 func TestCreateAndFree(t *testing.T) {
-	index := NewAnnoyIndexAngular(3)
+	index := NewAnnoyIndexEuclidean(3)
 	index.Verbose(true)
 	index.OnDiskBuild("index.ann")
 	v1 := []float32{0, 0, 1}
