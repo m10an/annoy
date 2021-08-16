@@ -28,10 +28,6 @@ extern "C" {
     return ptr->save(filename, prefault);
   }
 
-//  bool save(AnnoyI *ptr, const char *filename) {
-//    return ptr->save(filename, true);
-//  }
-
   void unload(AnnoyI *ptr) {
     ptr->unload();
   }
@@ -39,10 +35,6 @@ extern "C" {
   bool load(AnnoyI *ptr, const char *filename, bool prefault) {
     return ptr->load(filename, prefault);
   }
-
-//  bool load(AnnoyI *ptr, const char *filename) {
-//    return ptr->load(filename, true);
-//  }
 
   float get_distance(AnnoyI *ptr, int i, int j) {
     return ptr->get_distance(i, j);

@@ -12,6 +12,7 @@ func TestCreateAndFree(t *testing.T) {
 	index.AddItem(1, v2)
 	index.AddItem(2, v3)
 	index.Build(10)
+	index.Save("index.ann", false)
 	println(index.GetNItems())
 	a, b := index.GetNnsByItem(0, 4, -1)
 	fmt.Println(a, b)
@@ -23,4 +24,5 @@ func TestCreateAndFree(t *testing.T) {
 	fmt.Println(index.GetItem(0))
 	fmt.Println(index.GetItem(1))
 	fmt.Println(index.GetItem(2))
+	DeleteAnnoyIndex(index)
 }

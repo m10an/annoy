@@ -1,5 +1,6 @@
 package annoy
 
+// #include <stdlib.h>
 // #include "annoygomodule.h"
 import "C"
 import "unsafe"
@@ -13,6 +14,22 @@ func NewAnnoyIndexAngular(f int) Index {
 	return Index{C.create_annidx_angular(C.int(f)), f}
 }
 
+func NewAnnoyIndexEuclidean(f int) Index {
+	return Index{C.create_annidx_euclidean(C.int(f)), f}
+}
+
+func NewAnnoyIndexManhattan(f int) Index {
+	return Index{C.create_annidx_manhattan(C.int(f)), f}
+}
+
+func NewAnnoyIndexDotProduct(f int) Index {
+	return Index{C.create_annidx_dot_product(C.int(f)), f}
+}
+
+func DeleteAnnoyIndex(i Index) {
+	C.free_annidx(i.self)
+}
+
 func (i *Index) AddItem(item int, w []float32) {
 	C.add_item(i.self, C.int(item), (*C.float)(&w[0]))
 }
@@ -23,6 +40,26 @@ func (i *Index) GetNItems() int {
 
 func (i *Index) Build(nTrees int) {
 	C.build(i.self, C.int(nTrees))
+}
+
+func (i *Index) Save(filename string, prefault bool) {
+	chars := C.CString(filename)
+	C.save(i.self, chars, C.bool(prefault))
+	C.free(unsafe.Pointer(chars))
+}
+
+func (i *Index) Unload() {
+	C.unload(i.self)
+}
+
+func (i *Index) Load(filename string, prefault bool) {
+	chars := C.CString(filename)
+	C.load(i.self, chars, C.bool(prefault))
+	C.free(unsafe.Pointer(chars))
+}
+
+func (i *Index) GetDistance(firstItem int, secondItem int) float32 {
+	return float32(C.get_distance(i.self, C.int(firstItem), C.int(secondItem)))
 }
 
 func (i *Index) GetNnsByItem(item int, n int, kSearch int) ([]int32, []float32) {
@@ -53,4 +90,14 @@ func (i *Index) GetItem(item int) []float32 {
 	vector := make([]float32, i.nFeatures)
 	C.get_item(i.self, C.int(item), (*C.float)(&vector[0]))
 	return vector
+}
+
+func (i *Index) OnDiskBuild(filename string) {
+	chars := C.CString(filename)
+	C.on_disk_build(i.self, chars)
+	C.free(unsafe.Pointer(chars))
+}
+
+func (i *Index) Verbose(v bool) {
+	C.verbose(i.self, C.bool(v))
 }
