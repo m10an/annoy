@@ -1,4 +1,4 @@
-package annoy
+package src
 
 /*
 #include <stdlib.h>
